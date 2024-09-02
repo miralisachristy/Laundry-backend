@@ -3,10 +3,17 @@ const express = require("express");
 const pool = require("../pool");
 const router = express.Router();
 
-// Get all transaction details
+// Get all transaction details with related service data
 router.get("/", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM transaction_details");
+    const query = `
+      SELECT td.id_detail, td.id_service, td.quantity, td.price, td.remarks, td.created_at, td.finished_date,
+             s.image, s.service_name, s.service_type, s.processing_time, s.price AS service_price
+      FROM transaction_details td
+      JOIN service s ON td.id_service = s.id_service
+    `;
+
+    const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
     console.error(err.message);
@@ -14,17 +21,24 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a transaction detail by ID
+// Get transaction detail by id with related service data
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await pool.query(
-      "SELECT * FROM transaction_details WHERE id_detail = $1",
-      [id]
-    );
+    const query = `
+      SELECT td.id_detail, td.id_service, td.quantity, td.price, td.remarks, td.created_at, td.finished_date,
+             s.image, s.service_name, s.service_type, s.processing_time, s.price AS service_price
+      FROM transaction_details td
+      JOIN service s ON td.id_service = s.id_service
+      WHERE td.id_detail = $1
+    `;
+
+    const result = await pool.query(query, [id]);
+
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Transaction detail not found" });
     }
+
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err.message);
