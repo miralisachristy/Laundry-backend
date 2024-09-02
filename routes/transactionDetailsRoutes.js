@@ -34,28 +34,13 @@ router.get("/:id", async (req, res) => {
 
 // Create a new transaction detail
 router.post("/", async (req, res) => {
-  const {
-    id_transaction,
-    id_service,
-    quantity,
-    price,
-    remarks,
-    created_at,
-    finished_date,
-  } = req.body;
+  const { id_service, quantity, price, remarks, created_at, finished_date } =
+    req.body;
   try {
     const result = await pool.query(
-      `INSERT INTO transaction_details (id_transaction, id_service, quantity, price, remarks, created_at, finished_date) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [
-        id_transaction,
-        id_service,
-        quantity,
-        price,
-        remarks,
-        created_at,
-        finished_date,
-      ]
+      `INSERT INTO transaction_details (id_service, quantity, price, remarks, created_at, finished_date) 
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [id_service, quantity, price, remarks, created_at, finished_date]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -67,29 +52,13 @@ router.post("/", async (req, res) => {
 // Update a transaction detail
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const {
-    id_transaction,
-    id_service,
-    quantity,
-    price,
-    remarks,
-    created_at,
-    finished_date,
-  } = req.body;
+  const { id_service, quantity, price, remarks, created_at, finished_date } =
+    req.body;
   try {
     const result = await pool.query(
-      `UPDATE transaction_details SET id_transaction = $1, id_service = $2, quantity = $3, price = $4, remarks = $5, created_at = $6, finished_date = $7 
-      WHERE id_detail = $8 RETURNING *`,
-      [
-        id_transaction,
-        id_service,
-        quantity,
-        price,
-        remarks,
-        created_at,
-        finished_date,
-        id,
-      ]
+      `UPDATE transaction_details SET id_service = $1, quantity = $2, price = $3, remarks = $4, created_at = $5, finished_date = $6 
+      WHERE id_detail = $7 RETURNING *`,
+      [id_service, quantity, price, remarks, created_at, finished_date, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Transaction detail not found" });

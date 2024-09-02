@@ -43,11 +43,12 @@ router.post("/", async (req, res) => {
     transaction_code,
     total_amount,
     remarks,
+    status,
   } = req.body;
   try {
     const result = await pool.query(
-      `INSERT INTO transactions (id_outlet, id_user, id_customer, id_detail, id_payment, transaction_code, total_amount, remarks) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      `INSERT INTO transactions (id_outlet, id_user, id_customer, id_detail, id_payment, transaction_code, total_amount, remarks, status) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       [
         id_outlet,
         id_user,
@@ -57,6 +58,7 @@ router.post("/", async (req, res) => {
         transaction_code,
         total_amount,
         remarks,
+        status,
       ]
     );
     res.status(201).json(result.rows[0]);
@@ -78,11 +80,13 @@ router.put("/:id", async (req, res) => {
     transaction_code,
     total_amount,
     remarks,
+    status,
   } = req.body;
   try {
     const result = await pool.query(
       `UPDATE transactions SET id_outlet = $1, id_user = $2, id_customer = $3, id_detail = $4, id_payment = $5, 
-      transaction_code = $6, total_amount = $7, remarks = $8 WHERE id_transaction = $9 RETURNING *`,
+      transaction_code = $6, total_amount = $7, remarks = $8, status = $9 
+      WHERE id_transaction = $10 RETURNING *`,
       [
         id_outlet,
         id_user,
@@ -92,6 +96,7 @@ router.put("/:id", async (req, res) => {
         transaction_code,
         total_amount,
         remarks,
+        status,
         id,
       ]
     );
