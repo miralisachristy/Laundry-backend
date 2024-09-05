@@ -1,6 +1,8 @@
 const express = require("express");
+const path = require("path");
 const pool = require("../pool");
 const router = express.Router();
+const upload = require("../config/multerConfig"); // Import multer configuration
 
 // Get all services
 router.get("/", async (req, res) => {
@@ -16,7 +18,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a services by ID
+// Get a service by ID
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -27,39 +29,26 @@ router.get("/:id", async (req, res) => {
     if (result.rows.length > 0) {
       res.json(result.rows[0]);
     } else {
-      res.status(404).json({ message: "Services not found" });
+      res.status(404).json({ message: "Service not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Create a new services
-router.post("/", async (req, res) => {
-  const {
-    id_outlet,
-    image,
-    service_name,
-    service_type,
-    processing_time,
-    price,
-  } = req.body;
+// Create a new service
+router.post("/", upload.single("image"), async (req, res) => {
+  const { service_name, service_type, processing_time, price } = req.body;
+  const image = req.file ? `${req.file.filename}` : ""; // Save the path to the file
 
-  if (
-    !id_outlet ||
-    !image ||
-    !service_name ||
-    !service_type ||
-    !processing_time ||
-    !price
-  ) {
+  if (!service_name || !service_type || !processing_time || !price) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
     const result = await pool.query(
-      "INSERT INTO services (id_outlet, image, service_name, service_type, processing_time, price, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING *",
-      [id_outlet, image, service_name, service_type, processing_time, price]
+      "INSERT INTO services (image, service_name, service_type, processing_time, price, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING *",
+      [image, service_name, service_type, processing_time, price]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -68,32 +57,19 @@ router.post("/", async (req, res) => {
 });
 
 // Update a service by ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", upload.single("image"), async (req, res) => {
   const { id } = req.params;
-  const {
-    id_outlet,
-    image,
-    service_name,
-    service_type,
-    processing_time,
-    price,
-  } = req.body;
+  const { service_name, service_type, processing_time, price } = req.body;
+  const image = req.file ? `/upload/services/${req.file.filename}` : "";
 
-  if (
-    !id_outlet ||
-    !image ||
-    !service_name ||
-    !service_type ||
-    !processing_time ||
-    !price
-  ) {
+  if (!service_name || !service_type || !processing_time || !price) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
     const result = await pool.query(
-      "UPDATE services SET id_outlet = $1, image = $2, service_name = $3, service_type = $4, processing_time = $5, price = $6, updated_at = NOW() WHERE id_service = $7 RETURNING *",
-      [id_outlet, image, service_name, service_type, processing_time, price, id]
+      "UPDATE services SET image = $1, service_name = $2, service_type = $3, processing_time = $4, price = $5, updated_at = NOW() WHERE id_service = $6 RETURNING *",
+      [image, service_name, service_type, processing_time, price, id]
     );
 
     if (result.rows.length > 0) {
