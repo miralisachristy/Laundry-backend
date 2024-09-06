@@ -7,7 +7,7 @@ router.get("/outlets/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const result = await pool.query(
-      "SELECT nama_outlet FROM outlet WHERE id_outlet = $1",
+      "SELECT nama_outlet FROM outlet WHERE id_outlet = $1" ,
       [id]
     );
     if (result.rows.length > 0) {

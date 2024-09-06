@@ -1,9 +1,9 @@
 const express = require("express");
 const { Pool } = require("pg");
 const cors = require("cors");
-const OutletName = require("./routes/OutletName.js");
-const authRoutes = require("./routes/auth.js");
-const PORT = process.env.PORT || 5000;
+const OutletName = require("./routes/OutletName");
+const authRoutes = require("./routes/authRoutes");
+const PORT = process.env.PORT || 4000;
 const serviceRoutes = require("./routes/serviceRoutes");
 const outletRoutes = require("./routes/outletRoutes"); // Import outletRoutes
 const customerRoutes = require("./routes/customerRoutes"); // Import customerRoutes
@@ -11,7 +11,6 @@ const userRoutes = require("./routes/userRoutes"); // Import userRoutes
 const transactionDetailsRoutes = require("./routes/transactionDetailsRoutes"); // Import transactionDetailsRoutes
 const transactionsRoutes = require("./routes/transactionsRoutes"); // Import transactionsRoutes
 const paymentRoutes = require("./routes/paymentRoutes"); // Import paymentRoutes
-
 const path = require("path");
 
 const app = express();
