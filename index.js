@@ -1,9 +1,8 @@
 const express = require("express");
 const { Pool } = require("pg");
 const cors = require("cors");
-const OutletName = require("./routes/OutletName");
 const authRoutes = require("./routes/authRoutes");
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 const serviceRoutes = require("./routes/serviceRoutes");
 const outletRoutes = require("./routes/outletRoutes"); // Import outletRoutes
 const customerRoutes = require("./routes/customerRoutes"); // Import customerRoutes
@@ -17,7 +16,6 @@ const app = express();
 
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Middleware to parse JSON bodies
-app.use("/api/laundry", OutletName); // Use the routes from .js
 app.use("/api/auth", authRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/outlets", outletRoutes); // Use the routes from outletRoutes.js

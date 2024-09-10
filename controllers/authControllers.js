@@ -1,5 +1,7 @@
 const User = require("../models/userModel");
 const baseResponse = require("../utils/baseResponse");
+const { generateToken, generateRefreshToken } = require("../utils/jwt");
+const jwt = require("jsonwebtoken");
 
 const authControllers = {
   async login(req, res) {
@@ -32,6 +34,14 @@ const authControllers = {
         return res.status(400).json(baseResponse(400, null, "Password Salah"));
       }
 
+      const token = generateToken(user);
+      const refreshToken = generateRefreshToken(user);
+
+      user.token = token;
+      user.refreshToken = refreshToken;
+
+      User.updateUserToken(user.id, token, refreshToken);
+
       //Username dan password valid, success get user
       return res.status(200).json(baseResponse(200, user, "Login Berhasil"));
     } catch (error) {
@@ -41,6 +51,41 @@ const authControllers = {
     return res
       .status(200)
       .json(baseResponse(200, user, "Data berhasil didapatkan"));
+  },
+
+  async authRefreshToken(req, res) {
+    const { refresh_token } = req.body;
+
+    //Kalau tidak ada token, kirim res 400
+    if (!refresh_token) {
+      return res.status(400).json(baseResponse(400, null, "Tidak ada Token"));
+    }
+
+    try {
+      const decoded = jwt.verify(refresh_token, process.env.JWT_REFRESH_SECRET);
+      const userId = decoded.userId;
+
+      const user = User.findByUserId(userId);
+      const newToken = generateToken(user);
+      const newRefreshToken = generateRefreshToken(user);
+
+      user.token = newToken;
+      user.refreshToken = newRefreshToken;
+
+      User.updateUserToken(user.id, newToken, newRefreshToken);
+
+      return res
+        .status(200)
+        .json(baseResponse(200, user, "Refresh Token Berhasil"));
+    } catch (error) {
+      if (error.name === "JsonWebTokenError") {
+        return res.status(401).json(baseResponse(401, null, "Invalid token"));
+      } else {
+        return res
+          .status(500)
+          .json(baseResponse(500, null, "Internal Server Error"));
+      }
+    }
   },
 };
 
