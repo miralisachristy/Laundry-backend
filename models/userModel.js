@@ -84,24 +84,17 @@ const User = {
     await pool.query(query, [idUser, token, refreshToken]);
   },
 
+  // Model: userModel.js
+
   async deleteUsers(ids) {
-    if (!Array.isArray(ids) || ids.length === 0) {
-      throw new Error("Invalid user IDs");
-    }
-
     const query = `
-      DELETE FROM users
-      WHERE id_user = ANY($1::int[])
-      RETURNING *
-    `;
+    DELETE FROM users 
+    WHERE id_user = ANY($1::int[])
+    RETURNING id_user;
+  `;
+    const { rows } = await pool.query(query, [ids]);
 
-    try {
-      const { rows } = await pool.query(query, [ids]);
-      return rows; // Return the deleted users
-    } catch (error) {
-      console.error("Error deleting users:", error);
-      throw new Error("Failed to delete users.");
-    }
+    return rows; // Return the list of deleted user IDs
   },
 };
 

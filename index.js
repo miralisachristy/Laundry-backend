@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes"); // Import userRoutes
 const transactionDetailsRoutes = require("./routes/transactionDetailsRoutes"); // Import transactionDetailsRoutes
 const transactionsRoutes = require("./routes/transactionsRoutes"); // Import transactionsRoutes
 const paymentRoutes = require("./routes/paymentRoutes"); // Import paymentRoutes
+const cartRoutes = require("./routes/cartRoutes");
 const path = require("path");
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/users", userRoutes); // Use the routes from userRoutes.js
 app.use("/api/transaction-details", transactionDetailsRoutes); // Use the routes from transactionDetailsRoutes.js
 app.use("/api/transactions", transactionsRoutes); // Use the routes from transactionsRoutes.js
 app.use("/api/payments", paymentRoutes); // Use the routes from paymentRoutes.js
+app.use("/api/cart", cartRoutes); // Route for handling cart operations
 
 app.use("/upload", express.static(path.join(__dirname, "upload")));
 

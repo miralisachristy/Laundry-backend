@@ -17,11 +17,11 @@ const Outlet = {
     return rows.length > 0 ? rows[0].outlet_name : null; // Return the outlet name or null if not found
   },
 
-  async updateOutlet(id, { outlet_name, address, phone, describ, logo }) {
+  async updateOutlet(id, { outlet_name, address, phone, describ }) {
     const query = `
       UPDATE outlet 
-      SET outlet_name = $1, address = $2, phone = $3, describ = $4, updated_at = NOW(), logo = $5 
-      WHERE id_outlet = $6 
+      SET outlet_name = $1, address = $2, phone = $3, describ = $4, updated_at = NOW() 
+      WHERE id_outlet = $5 
       RETURNING *
     `;
     const { rows } = await pool.query(query, [
@@ -29,9 +29,21 @@ const Outlet = {
       address,
       phone,
       describ,
-      logo,
       id,
     ]);
+
+    return rows.length > 0 ? rows[0] : null; // Return the updated outlet or null if not found
+  },
+
+  async updateOutletLogo(id, logo) {
+    const query = `
+      UPDATE outlet 
+      SET logo = $1, updated_at = NOW() 
+      WHERE id_outlet = $2 
+      RETURNING *
+    `;
+
+    const { rows } = await pool.query(query, [logo, id]);
 
     return rows.length > 0 ? rows[0] : null; // Return the updated outlet or null if not found
   },

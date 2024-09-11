@@ -69,13 +69,11 @@ const userControllers = {
 
   async updateUser(req, res) {
     const { id } = req.params;
-    const { id_outlet, role, name, username, password, email, phone } =
-      req.body;
+    const { role, name, username, password, email, phone } = req.body;
 
     try {
       // Call the service method to update the user
       const updatedUser = await User.updateUser(id, {
-        id_outlet,
         role,
         name,
         username,
@@ -98,6 +96,8 @@ const userControllers = {
     }
   },
 
+  // Controller: userController.js
+
   async deleteUsers(req, res) {
     const { ids } = req.body;
 
@@ -108,20 +108,21 @@ const userControllers = {
     }
 
     try {
-      const query = `
-        DELETE FROM users 
-        WHERE id_user = ANY($1::int[])
-        RETURNING id_user;
-      `;
-      const { rows } = await pool.query(query, [ids]);
+      // Call the service method to delete users
+      const deletedUsers = await User.deleteUsers(ids);
 
-      return res.status(200).json({
-        message: "Users deleted successfully",
-        deletedUsers: rows,
-      });
+      if (deletedUsers.length === 0) {
+        return res.status(404).json(baseResponse(404, null, "Users not found"));
+      }
+
+      return res
+        .status(200)
+        .json(baseResponse(200, deletedUsers, "Users deleted successfully"));
     } catch (error) {
       console.error("Error deleting users:", error);
-      return res.status(500).json({ error: "Failed to delete users." });
+      return res
+        .status(500)
+        .json(baseResponse(500, null, "Failed to delete users."));
     }
   },
 };

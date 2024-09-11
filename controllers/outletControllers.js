@@ -41,7 +41,6 @@ const outletControllers = {
   async updateOutlet(req, res) {
     const { id } = req.params;
     const { outlet_name, address, phone, describ } = req.body;
-    const logo = req.file ? `/upload/outlets/${req.file.filename}` : "";
 
     // Validate that all fields are provided
     if (!outlet_name || !address || !phone || !describ) {
@@ -52,8 +51,8 @@ const outletControllers = {
 
     try {
       // Call the service method to update the outlet
+
       const result = await Outlet.updateOutlet(id, {
-        logo,
         outlet_name,
         address,
         phone,
@@ -70,6 +69,40 @@ const outletControllers = {
           .json(baseResponse(404, null, "Outlet not found"));
       }
     } catch (error) {
+      console.log("error nih", error);
+      return res
+        .status(500)
+        .json(baseResponse(500, null, "Internal server error"));
+    }
+  },
+
+  async updateOutletLogo(req, res) {
+    const { id } = req.params;
+    const logo = req.file ? `/upload/outlets/${req.file.filename}` : "";
+
+    try {
+      // Validate that the logo is provided if a file is uploaded
+      console.log("masuk");
+      if (!logo) {
+        return res
+          .status(400)
+          .json(baseResponse(400, null, "Logo file is required"));
+      }
+
+      // Call the service method to update only the logo
+      const result = await Outlet.updateOutletLogo(id, logo);
+
+      if (result) {
+        return res
+          .status(200)
+          .json(baseResponse(200, result, "Outlet logo updated successfully"));
+      } else {
+        return res
+          .status(404)
+          .json(baseResponse(404, null, "Outlet not found"));
+      }
+    } catch (error) {
+      console.log("Error:", error);
       return res
         .status(500)
         .json(baseResponse(500, null, "Internal server error"));

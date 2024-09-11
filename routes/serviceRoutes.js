@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../config/multerConfig"); // Import multer configuration
+
 const serviceControllers = require("../controllers/serviceController");
+const createMulter = require("../config/multerConfig");
+
+const upload = createMulter("services");
 
 router.get("/", serviceControllers.getAllService);
 
