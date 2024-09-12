@@ -8,7 +8,7 @@ const router = express.Router();
 const uploadLogo = createMulter("outlets");
 
 router.get("/", outletControllers.getAllOutlets);
-router.put("/id/:id", outletControllers.updateOutlet);
+router.put("/update/:id", outletControllers.updateOutlet);
 
 router.get("/outlet/:id", outletControllers.getOutletName);
 router.put(

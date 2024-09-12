@@ -10,7 +10,7 @@ const Outlet = {
 
   async getOutletName(id) {
     const query = `
-      SELECT outlet_name FROM outlet WHERE id_outlet = $1
+      SELECT outlet_name,logo FROM outlet WHERE id_outlet = $1
     `;
     const { rows } = await pool.query(query, [id]);
 
