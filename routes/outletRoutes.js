@@ -17,6 +17,4 @@ router.put(
   outletControllers.updateOutletLogo
 );
 
-router;
-
 module.exports = router;

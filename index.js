@@ -11,6 +11,8 @@ const transactionDetailsRoutes = require("./routes/transactionDetailsRoutes"); /
 const transactionsRoutes = require("./routes/transactionsRoutes"); // Import transactionsRoutes
 const paymentRoutes = require("./routes/paymentRoutes"); // Import paymentRoutes
 const cartRoutes = require("./routes/cartRoutes");
+const quotaRoutes = require("./routes/quotaRoutes");
+const quotaDailyHistoryRoutes = require("./routes/quotaDailyHistoryRoutes");
 const path = require("path");
 
 const app = express();
@@ -26,6 +28,8 @@ app.use("/api/transaction-details", transactionDetailsRoutes); // Use the routes
 app.use("/api/transactions", transactionsRoutes); // Use the routes from transactionsRoutes.js
 app.use("/api/payments", paymentRoutes); // Use the routes from paymentRoutes.js
 app.use("/api/cart", cartRoutes); // Route for handling cart operations
+app.use("/api/quotas", quotaRoutes);
+app.use("/api/quotas-daily-history", quotaDailyHistoryRoutes);
 
 app.use("/upload", express.static(path.join(__dirname, "upload")));
 
