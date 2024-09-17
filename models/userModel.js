@@ -91,7 +91,7 @@ const User = {
     DELETE FROM users 
     WHERE id_user = ANY($1::int[])
     RETURNING id_user;
-  `;
+    `;
     const { rows } = await pool.query(query, [ids]);
 
     return rows; // Return the list of deleted user IDs

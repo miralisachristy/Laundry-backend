@@ -38,26 +38,15 @@ const Customer = {
     return rows.length > 0 ? rows[0] : null; // Return updated customer or null if not found
   },
 
-  async deleteCustomer(req, res) {
-    const { id } = req.params;
+  async deleteCustomer(ids) {
+    const query = `
+    DELETE FROM customer 
+    WHERE id_customer = ANY($1::int[])
+    RETURNING id_customer
+    `;
+    const { rows } = await pool.query(query, [ids]);
 
-    try {
-      // Call the service method to delete the customer
-      const deletedCustomer = await Customer.deleteCustomer(id);
-
-      if (!deletedCustomer) {
-        return res
-          .status(404)
-          .json(baseResponse(404, null, "Customer not found"));
-      }
-      return res
-        .status(200)
-        .json(baseResponse(200, null, "Customer deleted successfully"));
-    } catch (error) {
-      return res
-        .status(500)
-        .json(baseResponse(500, null, "Internal server error"));
-    }
+    return rows; // Return the list of deleted user IDs
   },
 };
 
