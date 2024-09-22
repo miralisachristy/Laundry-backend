@@ -15,7 +15,6 @@ const Service = {
         WHERE id_service = $1
     `;
     const { rows } = await pool.query(query, [idService]);
-    console.log(rows);
     return rows;
   },
 
@@ -50,9 +49,6 @@ const Service = {
       }
       params.push(price);
     }
-
-    console.log("Query: ", query); // For debugging
-    console.log("Params: ", params); // For debugging
 
     const { rows } = await pool.query(query, params);
     return rows;

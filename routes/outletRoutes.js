@@ -4,7 +4,7 @@ const outletControllers = require("../controllers/outletControllers");
 const createMulter = require("../config/multerConfig");
 const router = express.Router();
 
-// Create multer instance for handling logo uploads
+// Create multer instance for handling logo upload
 const uploadLogo = createMulter("outlets");
 
 router.get("/", outletControllers.getAllOutlets);

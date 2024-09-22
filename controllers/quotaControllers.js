@@ -6,8 +6,6 @@ const quotaControllers = {
     try {
       // Call the model method to get all quotas
       const quotas = await Quota.getAllQuotas();
-      console.log("quota fetching");
-
       return res
         .status(200)
         .json(baseResponse(200, quotas, "Quotas retrieved successfully"));

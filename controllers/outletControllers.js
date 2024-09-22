@@ -69,7 +69,6 @@ const outletControllers = {
           .json(baseResponse(404, null, "Outlet not found"));
       }
     } catch (error) {
-      console.log("error nih", error);
       return res
         .status(500)
         .json(baseResponse(500, null, "Internal server error"));
@@ -82,7 +81,6 @@ const outletControllers = {
 
     try {
       // Validate that the logo is provided if a file is uploaded
-      console.log("masuk");
       if (!logo) {
         return res
           .status(400)

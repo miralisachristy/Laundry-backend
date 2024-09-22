@@ -6,7 +6,6 @@ const Quota = {
       SELECT * FROM quota
     `;
     const { rows } = await pool.query(query);
-    console.log(rows);
     return rows; // Return all quotas
   },
 

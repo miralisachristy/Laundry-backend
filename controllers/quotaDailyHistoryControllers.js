@@ -3,7 +3,6 @@ const baseResponse = require("../utils/baseResponse");
 
 const quotaDailyHistoryControllers = {
   async getAll(req, res) {
-    console.log("called");
     try {
       const history = await QuotaDailyHistory.getAll();
       return res

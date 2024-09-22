@@ -27,7 +27,7 @@ const Customer = {
     return rows[0]; // Return the newly created customer
   },
 
-  async updateCustomer({ id, name, phone, email, address }) {
+  async updateCustomer(id, { name, phone, email, address }) {
     const query = `
     UPDATE customer 
     SET name = $1, phone = $2, email = $3, address = $4 
@@ -42,7 +42,7 @@ const Customer = {
     const query = `
     DELETE FROM customer 
     WHERE id_customer = ANY($1::int[])
-    RETURNING id_customer
+    RETURNING id_customer;
     `;
     const { rows } = await pool.query(query, [ids]);
 

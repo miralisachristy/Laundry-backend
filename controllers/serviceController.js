@@ -15,7 +15,6 @@ const serviceControllers = {
 
   async getServiceById(req, res) {
     const id = req.params.id;
-    console.log("asdfasdf");
     try {
       const result = await Service.getServicesById(id);
 

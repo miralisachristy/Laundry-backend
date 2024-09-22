@@ -61,8 +61,7 @@ const customerControllers = {
 
     try {
       // Call the service method to update the customer
-      const updatedCustomer = await Customer.updateCustomer({
-        id,
+      const updatedCustomer = await Customer.updateCustomer(id, {
         name,
         phone,
         email,
@@ -86,14 +85,20 @@ const customerControllers = {
     }
   },
 
-  async deleteCustomer(req, res) {
-    const { id } = req.params;
+  async deleteCustomers(req, res) {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res
+        .status(400)
+        .json(baseResponse(400, null, "No customer IDs provided"));
+    }
 
     try {
       // Call the service method to delete the customer
-      const deletedCustomer = await Customer.deleteCustomer(id);
+      const deletedCustomer = await Customer.deleteCustomer(ids);
 
-      if (!deletedCustomer) {
+      if (!deletedCustomer.length === 0) {
         return res
           .status(404)
           .json(baseResponse(404, null, "Customer not found"));

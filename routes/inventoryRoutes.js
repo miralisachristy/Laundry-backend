@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const cartControllers = require("../controllers/cartControllers.js");
+const inventoryControllers = require("../controllers/inventoryControllers");
 
 // Route to add a service to the cart
-router.post("/add", cartControllers.addServiceToCart);
+router.get("/", inventoryControllers.getAllInventory);
 
 module.exports = router;

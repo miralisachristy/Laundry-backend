@@ -40,7 +40,9 @@ const authControllers = {
       user.token = token;
       user.refreshToken = refreshToken;
 
-      User.updateUserToken(user.id, token, refreshToken);
+      console.log("auth user: ", user);
+
+      User.updateUserToken(user.id_user, token, refreshToken);
 
       //Username dan password valid, success get user
       return res.status(200).json(baseResponse(200, user, "Login Berhasil"));
