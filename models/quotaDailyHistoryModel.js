@@ -13,24 +13,26 @@ const QuotaDailyHistory = {
     return rows.length > 0 ? rows[0] : null;
   },
 
-  async create({ date, used_quota }) {
+  async create({ date, used, remaining }) {
+    // Changed to used and remaining
     const query = `
-      INSERT INTO quota_daily_history (date, used_quota)
-      VALUES ($1, $2)
+      INSERT INTO quota_daily_history (date, used, remaining)
+      VALUES ($1, $2, $3)
       RETURNING *
     `;
-    const { rows } = await pool.query(query, [date, used_quota]);
+    const { rows } = await pool.query(query, [date, used, remaining]); // Added remaining
     return rows[0];
   },
 
-  async update(id, { date, used_quota }) {
+  async update(id, { date, used, remaining }) {
+    // Changed to used and remaining
     const query = `
       UPDATE quota_daily_history 
-      SET date = $1, used_quota = $2
-      WHERE id = $3
+      SET date = $1, used = $2, remaining = $3
+      WHERE id = $4
       RETURNING *
     `;
-    const { rows } = await pool.query(query, [date, used_quota, id]);
+    const { rows } = await pool.query(query, [date, used, remaining, id]); // Added remaining
     return rows.length > 0 ? rows[0] : null;
   },
 

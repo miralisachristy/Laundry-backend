@@ -111,24 +111,35 @@ const serviceControllers = {
     }
   },
 
-  async deleteService(req, res) {
-    const { id } = req.params;
+  async deleteServices(req, res) {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res
+        .status(400)
+        .json(baseResponse(400, null, "No service IDs provided"));
+    }
 
     try {
-      // Call the service method to delete the service
-      const result = await Service.deleteService(id);
+      // Call the service method to delete services
+      const deletedServices = await Service.deleteServices(ids);
 
-      if (result) {
-        return res.status(204).send(); // No content, successful deletion
-      } else {
+      if (deletedServices.length === 0) {
         return res
           .status(404)
-          .json(baseResponse(404, null, "Service not found"));
+          .json(baseResponse(404, null, "Services not found"));
       }
+
+      return res
+        .status(200)
+        .json(
+          baseResponse(200, deletedServices, "Services deleted successfully")
+        );
     } catch (error) {
+      console.error("Error deleting services:", error);
       return res
         .status(500)
-        .json(baseResponse(500, null, "Internal server error"));
+        .json(baseResponse(500, null, "Failed to delete services."));
     }
   },
 };

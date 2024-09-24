@@ -16,6 +16,6 @@ router.get("/filter", serviceControllers.getServiceFilter);
 //CONTOH PAKE PARAMS
 router.get("/id/:id", serviceControllers.getServiceById);
 router.put("/id/:id", upload.single("image"), serviceControllers.updateService);
-router.delete("/id/:id", serviceControllers.deleteService);
+router.post("/delete", serviceControllers.deleteServices);
 
 module.exports = router;

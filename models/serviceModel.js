@@ -101,14 +101,15 @@ const Service = {
     return rows.length > 0 ? rows[0] : null;
   },
 
-  async deleteService(id) {
+  async deleteServices(ids) {
     const query = `
-    DELETE FROM services 
-    WHERE id_service = $1 
-    RETURNING *
-  `;
-    const { rowCount } = await pool.query(query, [id]);
-    return rowCount > 0; // Returns true if the deletion was successful, false otherwise
+      DELETE FROM services 
+      WHERE id_service = ANY($1::int[])
+      RETURNING id_service;
+    `;
+    const { rows } = await pool.query(query, [ids]);
+
+    return rows; // Return the list of deleted service IDs
   },
 };
 

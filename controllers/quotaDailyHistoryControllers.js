@@ -47,14 +47,18 @@ const quotaDailyHistoryControllers = {
   },
 
   async create(req, res) {
-    const { date, used_quota } = req.body;
-    if (date === undefined || used_quota === undefined) {
+    const { date, used, remaining } = req.body;
+    if (date === undefined || used === undefined || remaining === undefined) {
       return res
         .status(400)
         .json(baseResponse(400, null, "All fields are required"));
     }
     try {
-      const newHistory = await QuotaDailyHistory.create({ date, used_quota });
+      const newHistory = await QuotaDailyHistory.create({
+        date,
+        used,
+        remaining,
+      });
       return res
         .status(201)
         .json(
@@ -73,8 +77,8 @@ const quotaDailyHistoryControllers = {
 
   async update(req, res) {
     const { id } = req.params;
-    const { date, used_quota } = req.body;
-    if (date === undefined || used_quota === undefined) {
+    const { date, used, remaining } = req.body;
+    if (date === undefined || used === undefined || remaining === undefined) {
       return res
         .status(400)
         .json(baseResponse(400, null, "All fields are required"));
@@ -82,7 +86,8 @@ const quotaDailyHistoryControllers = {
     try {
       const updatedHistory = await QuotaDailyHistory.update(id, {
         date,
-        used_quota,
+        used,
+        remaining,
       });
       if (updatedHistory) {
         return res
@@ -131,11 +136,7 @@ const quotaDailyHistoryControllers = {
   async getFromToday(req, res) {
     try {
       const today = new Date().toISOString().split("T")[0]; // Get today's date in 'YYYY-MM-DD' format
-
-      // Call the model to get data from today until the last date
       const records = await QuotaDailyHistory.getFromToday(today);
-
-      // Return a 200 status with an empty array if no records are found
       return res
         .status(200)
         .json(
