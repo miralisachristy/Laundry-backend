@@ -4,21 +4,7 @@ const Transaction = {
   // Fetch all transactions
   async getAllTransactions() {
     const query = `
-      SELECT
-        id,
-        invoice_code,
-        transaction_date,
-        outlet_name,
-        selected_customer,
-        order_details,
-        total_before_discount,
-        discount_amount,
-        total_after_discount,
-        payment_method,
-        payment_status,
-        payment_proof,
-        created_at,
-        updated_at
+      SELECT *
       FROM transactions
     `;
 
@@ -33,7 +19,6 @@ const Transaction = {
         id,
         invoice_code,
         transaction_date,
-        outlet_name,
         selected_customer,
         order_details,
         total_before_discount,
@@ -56,7 +41,6 @@ const Transaction = {
   async createTransaction({
     invoiceCode,
     transactionDate,
-    outletName,
     selectedCustomer,
     orderDetails,
     totalBeforeDiscount,
@@ -68,17 +52,16 @@ const Transaction = {
   }) {
     const query = `
       INSERT INTO transactions (
-        invoice_code, transaction_date, outlet_name, selected_customer,
+        invoice_code, transaction_date, selected_customer,
         order_details, total_before_discount, discount_amount, total_after_discount,
         payment_method, payment_status, payment_proof, created_at, updated_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), NOW())
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW())
       RETURNING *
     `;
 
     const values = [
       invoiceCode,
       transactionDate || new Date(),
-      outletName,
       selectedCustomer, // Stored as JSON
       orderDetails, // Stored as JSON
       totalBeforeDiscount,

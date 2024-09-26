@@ -11,13 +11,12 @@ router.post("/", quotaDailyHistoryControllers.create);
 
 router.get("/from-today", quotaDailyHistoryControllers.getFromToday);
 
-// Get a specific quota daily history record by ID
-router.get("/:id", quotaDailyHistoryControllers.getById);
+router.put("/id/:id", quotaDailyHistoryControllers.update);
 
-// Update an existing quota daily history record by ID
-router.put("/:id", quotaDailyHistoryControllers.update);
+// Get a specific quota daily history record by ID
+router.get("/id/:id", quotaDailyHistoryControllers.getById);
 
 // Delete a quota daily history record by ID
-router.delete("/:id", quotaDailyHistoryControllers.delete);
+router.delete("/id/:id", quotaDailyHistoryControllers.delete);
 
 module.exports = router;

@@ -17,8 +17,6 @@ const inventoryControllers = {
     const { item_code, item_name, item_type, supplier_name, remark, quantity } =
       req.body;
 
-    console.log("Request Body:", req.body); // Log incoming request data
-
     // Validate input
     if (
       !item_name ||
@@ -56,7 +54,6 @@ const inventoryControllers = {
     }
   },
 
-  // In your inventory controller
   async checkItemCode(req, res) {
     const { item_code } = req.params; // Get item_code from request parameters
 
@@ -78,6 +75,43 @@ const inventoryControllers = {
       return res
         .status(500)
         .json(baseResponse(500, null, "Internal server error"));
+    }
+  },
+
+  // Correctly define the deleteInventoryItems method
+  async deleteInventoryItems(req, res) {
+    const { ids } = req.body;
+
+    // Check if ids is an array and not empty
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res
+        .status(400)
+        .json(baseResponse(400, null, "No inventory item IDs provided"));
+    }
+
+    try {
+      const deletedItems = await Inventory.deleteInventoryItems(ids);
+
+      if (deletedItems.length === 0) {
+        return res
+          .status(404)
+          .json(baseResponse(404, null, "Inventory items not found"));
+      }
+
+      return res
+        .status(200)
+        .json(
+          baseResponse(
+            200,
+            deletedItems,
+            "Inventory items deleted successfully"
+          )
+        );
+    } catch (error) {
+      console.error("Error deleting inventory items:", error);
+      return res
+        .status(500)
+        .json(baseResponse(500, null, "Failed to delete inventory items."));
     }
   },
 };

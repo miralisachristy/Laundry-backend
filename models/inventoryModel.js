@@ -1,5 +1,4 @@
 const pool = require("../pool"); // Import the pool configured with .env
-const Service = require("./serviceModel");
 
 const Inventory = {
   async getInventory() {
@@ -31,7 +30,19 @@ const Inventory = {
       quantity,
     ]);
 
-    return rows[0]; // Kembalikan data yang baru saja ditambahkan
+    return rows[0]; // Return the newly added data
+  },
+
+  async deleteInventoryItems(ids) {
+    // Remove the 'function' keyword
+    const query = `
+      DELETE FROM inventory 
+      WHERE id = ANY($1::int[])
+      RETURNING id;
+    `;
+    const { rows } = await pool.query(query, [ids]);
+
+    return rows; // Return the list of deleted inventory IDs
   },
 };
 

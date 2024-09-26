@@ -78,17 +78,22 @@ const quotaDailyHistoryControllers = {
   async update(req, res) {
     const { id } = req.params;
     const { date, used, remaining } = req.body;
+
+    // Ensure all required fields are present
     if (date === undefined || used === undefined || remaining === undefined) {
       return res
         .status(400)
         .json(baseResponse(400, null, "All fields are required"));
     }
+
     try {
+      // Update the quota history record
       const updatedHistory = await QuotaDailyHistory.update(id, {
         date,
         used,
         remaining,
       });
+
       if (updatedHistory) {
         return res
           .status(200)
@@ -105,6 +110,7 @@ const quotaDailyHistoryControllers = {
           .json(baseResponse(404, null, "History not found"));
       }
     } catch (error) {
+      // Catch and respond with an error
       return res
         .status(500)
         .json(baseResponse(500, null, "Internal server error"));
@@ -137,6 +143,25 @@ const quotaDailyHistoryControllers = {
     try {
       const today = new Date().toISOString().split("T")[0]; // Get today's date in 'YYYY-MM-DD' format
       const records = await QuotaDailyHistory.getFromToday(today);
+
+      // // Check if records were found
+      // if (records.length === 0) {
+      //   // Create a default record if none were found
+      //   const defaultRecord = {
+      //     date: today,
+      //     used: quota.max_quota, // Ensure this variable is defined appropriately
+      //     remaining: quota.max_quota,
+      //   };
+      //   await QuotaDailyHistory.insertDefaultRecord(defaultRecord);
+      //   // Fetch the newly created record
+      //   const newRecords = await QuotaDailyHistory.getFromToday(today);
+      //   return res
+      //     .status(200)
+      //     .json(
+      //       baseResponse(200, newRecords, "Created default record successfully")
+      //     );
+      // }
+
       return res
         .status(200)
         .json(

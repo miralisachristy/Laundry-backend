@@ -40,8 +40,6 @@ const authControllers = {
       user.token = token;
       user.refreshToken = refreshToken;
 
-      console.log("auth user: ", user);
-
       User.updateUserToken(user.id_user, token, refreshToken);
 
       //Username dan password valid, success get user

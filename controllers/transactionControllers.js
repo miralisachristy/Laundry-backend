@@ -87,7 +87,7 @@ const transactionControllers = {
     } catch (error) {
       return res
         .status(500)
-        .json(baseResponse(500, null, "Internal server error"));
+        .json(baseResponse(500, null, "Internal server error xyz"));
     }
   },
 
